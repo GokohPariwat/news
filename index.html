@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เครื่องมือสร้างภาพข่าว 5W1H</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Prompt for Thai characters -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- html2canvas for capturing the DOM as an image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        body { 
+            font-family: 'Prompt', sans-serif; 
+            background-color: #f3f4f6; 
+        }
+        
+        /* Custom CSS Grid for different number of images (1-10) */
+        .photo-grid { 
+            display: grid; 
+            gap: 12px; 
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 1 Image */
+        .photo-grid-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+        
+        /* 2 Images */
+        .photo-grid-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+        
+        /* 3 Images */
+        .photo-grid-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .photo-grid-3 > div:first-child { grid-row: span 2; }
+        
+        /* 4 Images (2x2) */
+        .photo-grid-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        
+        /* 5 Images (2 top, 3 bottom) */
+        .photo-grid-5 { grid-template-columns: repeat(6, 1fr); grid-template-rows: 1fr 1fr; }
+        .photo-grid-5 > div:nth-child(1), .photo-grid-5 > div:nth-child(2) { grid-column: span 3; }
+        .photo-grid-5 > div:nth-child(n+3) { grid-column: span 2; }
+
+        /* 6 Images (3x2) */
+        .photo-grid-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
+        
+        /* 7 Images (3 top, 4 bottom) */
+        .photo-grid-7 { grid-template-columns: repeat(12, 1fr); grid-template-rows: 1fr 1fr; }
+        .photo-grid-7 > div:nth-child(1), .photo-grid-7 > div:nth-child(2), .photo-grid-7 > div:nth-child(3) { grid-column: span 4; }
+        .photo-grid-7 > div:nth-child(n+4) { grid-column: span 3; }
+
+        /* 8 Images (4x2) */
+        .photo-grid-8 { grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr; }
+        
+        /* 9 Images (3x3) */
+        .photo-grid-9 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); }
+        
+        /* 10 Images (5x2) */
+        .photo-grid-10 { grid-template-columns: repeat(5, 1fr); grid-template-rows: 1fr 1fr; }
+        
+        /* Shared image styling */
+        .photo-grid > div {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .photo-grid img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            display: block; 
+            background-color: #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        /* Custom Scrollbar for side panel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 shadow-sm py-2 md:py-3 px-4 md:px-6 z-20 flex justify-between items-center shrink-0">
+        <div class="flex items-center gap-2 md:gap-3">
+            <div class="bg-blue-600 text-white p-1.5 rounded-lg shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-base md:text-lg font-bold text-gray-800 leading-tight">News Layout Maker</h1>
+                <p class="text-[10px] md:text-xs text-gray-500 hidden sm:block">สร้างภาพข่าว 5W1H พร้อมเลย์เอาต์รูปภาพ</p>
+            </div>
+        </div>
+        <button id="btn-download" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 md:py-2 px-3 md:px-4 rounded-lg shadow-sm transition-colors flex items-center gap-2 text-xs md:text-sm shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span id="btn-text" class="hidden sm:inline">ดาวน์โหลดภาพ</span>
+            <span class="sm:hidden">ดาวน์โหลด</span>
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative bg-gray-50">
+        
+        <!-- Sidebar Controls -->
+        <div class="order-2 md:order-1 flex-1 md:flex-none w-full md:w-[350px] lg:w-[400px] bg-white border-t md:border-t-0 md:border-r border-gray-200 overflow-y-auto p-4 md:p-5 flex flex-col gap-5 z-10 shadow-[4px_0_15px_rgba(0,0,0,0.03)] pb-10 md:pb-5">
+            
+            <!-- Headline Input -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-800 mb-1">หัวข้อข่าว (Headline)</label>
+                <textarea id="in-title" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm shadow-sm" placeholder="พิมพ์พาดหัวข่าวที่นี่..."></textarea>
+            </div>
+            
+            <!-- 5W1H Inputs -->
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col gap-3">
+                <h3 class="text-sm font-semibold text-gray-800 mb-1 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                    </svg>
+                    เนื้อหาข่าว (5W1H)
+                </h3>
+                
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">รายละเอียด (ใคร ทำอะไร ที่ไหน เมื่อไหร่ อย่างไร)</label>
+                    <textarea id="in-details" rows="6" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 outline-none shadow-sm placeholder-gray-400" placeholder="พิมพ์เนื้อหาข่าวทั้งหมดที่นี่..."></textarea>
+                </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-800 mb-1">รูปภาพประกอบ (สูงสุด 10 รูป)</label>
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors relative cursor-pointer" onclick="document.getElementById('in-images').click()">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-gray-600 justify-center">
+                            <span class="relative font-medium text-blue-600 hover:text-blue-500">
+                                คลิกเพื่ออัปโหลดไฟล์
+                            </span>
+                        </div>
+                        <p class="text-xs text-gray-500">PNG, JPG สูงสุด 10 ไฟล์</p>
+                    </div>
+                </div>
+                <input type="file" id="in-images" multiple accept="image/*" class="hidden">
+            </div>
+
+            <!-- Theme Settings -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-800 mb-2">สีธีม (สีกรอบและพาดหัว)</label>
+                <div class="flex gap-3" id="theme-colors">
+                    <!-- Themes generated by JS -->
+                </div>
+            </div>
+            
+            <div class="mt-2 pb-4">
+                <button id="btn-clear" class="w-full py-2.5 px-4 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors shadow-sm">
+                    รีเซ็ตเป็นค่าเริ่มต้น
+                </button>
+            </div>
+        </div>
+
+        <!-- Preview Area (Canvas Container) -->
+        <div class="order-1 md:order-2 flex-none h-[45%] md:h-full md:flex-1 bg-gray-200 overflow-hidden flex justify-center items-center p-2 sm:p-4 md:p-8 shadow-inner" id="scroll-wrapper">
+            
+            <div id="scale-bounding-box" class="flex justify-center items-center">
+                <div id="canvas-container" class="relative shrink-0" style="width: 1280px; height: 720px; transform-origin: center center;">
+                    
+                    <!-- THE ACTUAL CANVAS TO CAPTURE: 16:9 Aspect Ratio (1280x720) -->
+                    <div id="news-canvas" class="bg-[#f8fafc] w-full h-full shadow-2xl p-10 flex flex-row gap-8 relative overflow-hidden border-t-[24px] border-b-[12px]" style="border-color: #b91c1c; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 24px 24px;">
+                        
+                        <!-- Decorative background elements -->
+                        <div id="bg-decoration" class="absolute -bottom-48 -left-48 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl pointer-events-none" style="background-color: #b91c1c;"></div>
+                        <div class="absolute top-0 right-0 w-full h-40 bg-gradient-to-b from-white/60 to-transparent pointer-events-none"></div>
+
+                        <!-- Left: Text Area (40%) -->
+                        <div class="w-[42%] flex flex-col h-full shrink-0 relative z-10 pr-2">
+                            <!-- Top Headline -->
+                            <div class="mb-8 border-l-[8px] pl-5 py-1" id="title-border" style="border-color: #b91c1c;">
+                                <h1 id="out-title" class="text-5xl font-extrabold leading-[1.15] tracking-tight relative z-10 break-words drop-shadow-sm" style="color: #b91c1c;">
+                                    [พาดหัวข่าว]
+                                </h1>
+                            </div>
+                            
+                            <!-- Content Section -->
+                            <div class="relative z-10 flex-1 flex flex-col mt-2">
+                                <div id="wrap-details" class="h-full overflow-hidden relative">
+                                    <!-- Decorative quote icon -->
+                                    <svg class="absolute top-0 left-0 w-16 h-16 text-gray-300 opacity-50 -translate-x-3 -translate-y-4 z-0 pointer-events-none" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+                                        <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+                                    </svg>
+                                    <div class="relative z-10 bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-white shadow-sm h-full">
+                                        <span id="out-details" class="text-[1.4rem] text-gray-800 leading-[1.7] whitespace-pre-wrap break-words font-medium"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right: Images Area (60%) -->
+                        <div class="w-[58%] h-full shrink-0 relative z-10 bg-white/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-white shadow-sm flex items-center justify-center p-3">
+                            <div id="out-images" class="hidden w-full h-full">
+                                <!-- Images injected by JS -->
+                            </div>
+                            <!-- Placeholder when no images -->
+                            <div id="empty-images" class="text-gray-400 text-2xl font-medium flex flex-col items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span>[พื้นที่แสดงรูปภาพ]</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- End of Capture Canvas -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // Default mock data to show layout immediately
+        const defaultData = {
+            title: '',
+            details: ''
+        };
+
+        // State to hold current uploaded image ObjectURLs
+        let imageUrls = [];
+
+        // Theme Configurations
+        const themes = [
+            { id: 'red', hex: '#b91c1c' },     // Red 700
+            { id: 'blue', hex: '#1d4ed8' },    // Blue 700
+            { id: 'green', hex: '#15803d' },   // Green 700
+            { id: 'orange', hex: '#ea580c' },  // Orange 600
+            { id: 'black', hex: '#111827' }    // Gray 900
+        ];
+        let currentTheme = themes[0];
+
+        
+        // Setup Themes UI
+        function setupThemes() {
+            const container = document.getElementById('theme-colors');
+            container.innerHTML = '';
+            
+            themes.forEach(theme => {
+                const btn = document.createElement('button');
+                btn.className = 'w-8 h-8 rounded-full shadow-sm border-2 transition-transform hover:scale-110 focus:outline-none';
+                btn.style.backgroundColor = theme.hex;
+                btn.style.borderColor = currentTheme.id === theme.id ? '#9ca3af' : 'transparent'; // gray-400
+                if(currentTheme.id === theme.id) btn.classList.add('scale-110');
+                
+                btn.onclick = () => applyTheme(theme, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function applyTheme(theme, activeBtn) {
+            currentTheme = theme;
+            
+            // Apply colors to Canvas
+            document.getElementById('news-canvas').style.borderColor = theme.hex;
+            
+            // Apply to title border and text
+            const titleBorder = document.getElementById('title-border');
+            if(titleBorder) titleBorder.style.borderColor = theme.hex;
+            
+            document.getElementById('out-title').style.color = theme.hex;
+            
+            // Apply to decorative background
+            const bgDeco = document.getElementById('bg-decoration');
+            if(bgDeco) bgDeco.style.backgroundColor = theme.hex;
+            
+            // Update button styles
+            const buttons = document.querySelectorAll('#theme-colors button');
+            buttons.forEach(b => {
+                b.style.borderColor = 'transparent';
+                b.classList.remove('scale-110');
+            });
+            activeBtn.style.borderColor = '#9ca3af';
+            activeBtn.classList.add('scale-110');
+        }
+
+        // Setup Event Listeners for Text Inputs
+        function bindInputs() {
+            const fields = [
+                { in: 'in-title', out: 'out-title' },
+                { in: 'in-details', out: 'out-details', wrap: 'wrap-details' },
+            ];
+
+            fields.forEach(f => {
+                const inputEl = document.getElementById(f.in);
+                inputEl.addEventListener('input', (e) => {
+                    const val = e.target.value;
+                    const outEl = document.getElementById(f.out);
+                    
+                    if (f.wrap) {
+                        const wrapEl = document.getElementById(f.wrap);
+                        if (val.trim()) {
+                            // Using textContent and CSS whitespace-pre-wrap to preserve formatting
+                            outEl.textContent = val;
+                            wrapEl.classList.remove('hidden');
+                        } else {
+                            wrapEl.classList.add('hidden');
+                            outEl.textContent = '';
+                        }
+                    } else {
+                        outEl.textContent = val;
+                        // Hide title border if text is empty
+                        const titleBorder = document.getElementById('title-border');
+                        if (titleBorder) {
+                            titleBorder.style.opacity = val.trim() ? '1' : '0';
+                            titleBorder.style.transition = 'opacity 0.2s';
+                        }
+                    }
+                    
+                    // Trigger resize logic just in case height changed drastically
+                    setTimeout(() => {
+                        resizeCanvas();
+                        autoAdjustText();
+                    }, 50);
+                });
+            });
+        }
+
+        // Auto-adjust font size to fit container
+        function autoAdjustText() {
+            // 1. Adjust Details Text
+            const detailsEl = document.getElementById('out-details');
+            const detailsWrap = document.getElementById('wrap-details');
+            
+            if (detailsWrap && !detailsWrap.classList.contains('hidden')) {
+                const contentContainer = detailsEl.parentElement;
+                
+                // Reset to default size before measuring
+                detailsEl.style.fontSize = '1.4rem'; 
+                detailsEl.style.lineHeight = '1.7';
+                
+                let detailSize = 22.4; // px equivalent to 1.4rem
+                
+                // Reduce font size until scrollHeight fits within clientHeight (min 12px)
+                while (contentContainer.scrollHeight > contentContainer.clientHeight && detailSize > 12) {
+                    detailSize -= 0.5;
+                    detailsEl.style.fontSize = detailSize + 'px';
+                    if (detailSize < 16) detailsEl.style.lineHeight = '1.5';
+                }
+            }
+
+            // 2. Adjust Title Text
+            const titleEl = document.getElementById('out-title');
+            if (titleEl && titleEl.textContent.trim()) {
+                // Reset to default CSS classes
+                titleEl.style.fontSize = ''; 
+                titleEl.style.lineHeight = '1.15';
+                
+                // Get the left column container to check if total height exceeds canvas height
+                const leftCol = titleEl.closest('.w-\\[42\\%\\]'); 
+                let titleSize = 48; // starting pixel size roughly matching text-5xl
+                
+                // If the entire left column overflows its parent height (min 20px)
+                while (leftCol.scrollHeight > leftCol.clientHeight && titleSize > 20) {
+                    titleSize -= 1;
+                    titleEl.style.fontSize = titleSize + 'px';
+                }
+            }
+        }
+
+        // Populate form with data
+        function loadData(data) {
+            document.getElementById('in-title').value = data.title;
+            document.getElementById('in-details').value = data.details;
+            
+            // Trigger input events to update preview
+            ['in-title', 'in-details'].forEach(id => {
+                document.getElementById(id).dispatchEvent(new Event('input'));
+            });
+        }
+
+        // Handle Image Uploads
+        document.getElementById('in-images').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files).slice(0, 10); // Limit to max 10
+            
+            // Revoke old URLs to free memory
+            imageUrls.forEach(url => URL.revokeObjectURL(url));
+            
+            // Create new URLs
+            imageUrls = files.map(f => URL.createObjectURL(f));
+            
+            renderImages();
+            
+            // Reset input so same file can be selected again if needed
+            this.value = '';
+        });
+
+        // Render Image Grid in Preview
+        function renderImages() {
+            const container = document.getElementById('out-images');
+            const emptyState = document.getElementById('empty-images');
+            container.innerHTML = '';
+            
+            const len = imageUrls.length;
+            if (len === 0) {
+                container.classList.add('hidden');
+                if (emptyState) emptyState.classList.remove('hidden');
+                setTimeout(resizeCanvas, 50);
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            if (emptyState) emptyState.classList.add('hidden');
+            container.className = `photo-grid photo-grid-${len} w-full h-full relative z-10`;
+            
+            imageUrls.forEach((src, idx) => {
+                const div = document.createElement('div');
+                const img = document.createElement('img');
+                img.src = src;
+                
+                // Add loading error handling
+                img.onerror = function() {
+                    this.src = `https://placehold.co/800x600/e5e7eb/a3a8b8?text=Image+Error`;
+                };
+                
+                div.appendChild(img);
+                container.appendChild(div);
+            });
+            
+            // Wait for images to render to recalculate scale
+            setTimeout(resizeCanvas, 100);
+        }
+
+        // Scale Canvas for Responsiveness (Fixing 16:9 view)
+        function resizeCanvas() {
+            const wrapper = document.getElementById('scroll-wrapper');
+            const canvasContainer = document.getElementById('canvas-container');
+            const boundingBox = document.getElementById('scale-bounding-box');
+            
+            const targetWidth = 1280; // Fixed 16:9 width
+            const targetHeight = 720; // Fixed 16:9 height
+            
+            // Calculate available space with slight padding
+            const availableWidth = wrapper.clientWidth - 32; 
+            const availableHeight = wrapper.clientHeight - 32;
+            
+            // Calculate scale based on both width and height to fit perfectly inside the container
+            const scale = Math.min(availableWidth / targetWidth, availableHeight / targetHeight, 1);
+            
+            // Apply scale
+            canvasContainer.style.transform = `scale(${scale})`;
+            
+            // Fix the bounding box so flex centering works nicely without overflow
+            if (boundingBox) {
+                boundingBox.style.width = `${targetWidth * scale}px`;
+                boundingBox.style.height = `${targetHeight * scale}px`;
+            }
+        }
+
+        // Download functionality using html2canvas
+        document.getElementById('btn-download').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-download');
+            const btnText = document.getElementById('btn-text');
+            const originalText = btnText.innerText;
+            
+            // UI Loading state
+            btnText.innerText = 'กำลังประมวลผล...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            const canvasContainer = document.getElementById('canvas-container');
+            const targetElement = document.getElementById('news-canvas');
+            
+            // Temporarily remove transform scale before capturing to ensure correct resolution
+            const currentTransform = canvasContainer.style.transform;
+            canvasContainer.style.transform = 'scale(1)';
+
+            try {
+                // Small delay to let browser reflow after removing scale
+                await new Promise(r => setTimeout(r, 100)); 
+
+                const canvas = await html2canvas(targetElement, {
+                    scale: 2, // 2x scale for higher resolution image
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    windowWidth: 1280,
+                    windowHeight: 720
+                });
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `news-layout-${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+            } catch (error) {
+                console.error("Error generating image:", error);
+                alert("เกิดข้อผิดพลาดในการสร้างรูปภาพ กรุณาลองใหม่อีกครั้ง");
+            } finally {
+                // Restore original styling
+                canvasContainer.style.transform = currentTransform;
+                
+                // Restore button state
+                btnText.innerText = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+        });
+
+        // Reset Button
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            if(confirm('ยืนยันการล้างข้อมูลทั้งหมด?')) {
+                document.getElementById('in-title').value = '';
+                document.getElementById('in-details').value = '';
+                
+                imageUrls.forEach(url => URL.revokeObjectURL(url));
+                imageUrls = [];
+                renderImages();
+                
+                // Trigger empty inputs
+                ['in-title', 'in-details'].forEach(id => {
+                    document.getElementById(id).dispatchEvent(new Event('input'));
+                });
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            setupThemes();
+            bindInputs();
+            loadData(defaultData);
+            
+            // Handle window resize
+            window.addEventListener('resize', resizeCanvas);
+            // Initial call to set correct scale
+            setTimeout(resizeCanvas, 100);
+        });
+
+    </script>
+</body>
+</html>
