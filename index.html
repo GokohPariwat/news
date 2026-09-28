@@ -134,7 +134,7 @@
                             <div class="flex items-center gap-6 mb-6 relative z-10">
                                 <!-- Logo Placeholder (can be replaced with real logo if uploaded, default to a crest icon) -->
                                 <div id="logo-container" class="w-24 h-24 rounded-full bg-white border-4 flex items-center justify-center shadow-md overflow-hidden shrink-0" style="border-color: #15803d;">
-                                    <img src="logo.png" alt="โลโก้หน่วยงาน" class="w-full h-full object-contain p-1" onerror="this.style.display='none'">
+                                    <img id="logo-image" src="logo.png" alt="โลโก้หน่วยงาน" class="w-full h-full object-contain p-1" onerror="this.style.display='none'">
                                 </div>
                                 <h2 id="out-agency" class="text-[3.2rem] font-extrabold tracking-tight theme-text" style="color: #15803d;">
                                     สำนักงานเขตพญาไท
@@ -210,6 +210,15 @@
         <div class="order-2 flex-1 md:flex-none w-full md:w-[380px] lg:w-[420px] bg-white border-t md:border-t-0 md:border-l border-gray-200 overflow-y-auto p-4 md:p-6 flex flex-col gap-5 shadow-[0_-4px_15px_rgba(0,0,0,0.03)] md:shadow-[-4px_0_15px_rgba(0,0,0,0.03)] z-20 pb-10 md:pb-6">
             
             <h3 class="font-bold text-gray-800 text-lg border-b pb-2">ข้อมูลข่าว</h3>
+
+            <!-- Logo Selection -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">เลือกโลโก้หน่วยงาน</label>
+                <div class="flex bg-gray-200/60 p-1 rounded-lg">
+                    <button id="logo-district" class="flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md bg-white shadow-sm text-green-700 transition-colors">สำนักงานเขต</button>
+                    <button id="logo-bma" class="flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md text-gray-500 hover:text-gray-800 transition-colors">กทม.</button>
+                </div>
+            </div>
 
             <!-- Agency Input -->
             <div>
@@ -625,6 +634,10 @@
             document.getElementById('fit-contain').addEventListener('click', () => setFitMode('contain'));
             document.getElementById('fit-cover').addEventListener('click', () => setFitMode('cover'));
 
+            // Logo Selection Listeners
+            document.getElementById('logo-bma').addEventListener('click', () => setLogoMode('bma'));
+            document.getElementById('logo-district').addEventListener('click', () => setLogoMode('district'));
+
             // บังคับให้โหลดเริ่มต้นเป็นโหมด "เต็มกรอบ" เพื่อให้ภาพพอดีกับช่องเสมอ
             setFitMode('cover');
 
@@ -660,6 +673,25 @@
             images.forEach(img => {
                 img.style.objectFit = mode;
             });
+        }
+
+        // ฟังก์ชันสลับโลโก้
+        function setLogoMode(mode) {
+            const img = document.getElementById('logo-image');
+            const btnBma = document.getElementById('logo-bma');
+            const btnDistrict = document.getElementById('logo-district');
+            
+            if (mode === 'bma') {
+                img.src = 'logo1.png';
+                img.style.display = 'block'; // เผื่อกรณีที่เคย error แล้วซ่อนไป
+                btnBma.className = 'flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md bg-white shadow-sm text-green-700 transition-colors';
+                btnDistrict.className = 'flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md text-gray-500 hover:text-gray-800 transition-colors';
+            } else {
+                img.src = 'logo.png';
+                img.style.display = 'block';
+                btnDistrict.className = 'flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md bg-white shadow-sm text-green-700 transition-colors';
+                btnBma.className = 'flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md text-gray-500 hover:text-gray-800 transition-colors';
+            }
         }
     </script>
 </body>
