@@ -171,42 +171,41 @@
                     
                     <div id="news-canvas" data-layout="classic" class="bg-white w-full h-full shadow-2xl flex flex-col relative overflow-hidden" style="--theme-color: #15803d; --theme-dark: #14532d;">
                         
-                        <!-- Watermark Background Logo -->
-                        <img id="bg-watermark" src="logo.png" class="absolute -top-[100px] -left-[100px] w-[800px] h-[800px] object-contain opacity-25 pointer-events-none mix-blend-multiply z-[1] transition-opacity" alt="" onerror="this.style.display='none'">
-
                         <!-- Top Header Section (25%) -->
-                        <div id="section-header" class="relative pt-12 pb-6 px-10 flex flex-col items-center z-10 shrink-0 transition-all duration-300">
+                        <div id="section-header" class="relative pt-12 pb-6 px-10 flex flex-col items-center z-10 shrink-0 transition-all duration-300 overflow-hidden">
+                            
+                            <!-- Watermark Background Logo (Moved here so it doesn't overflow to images) -->
+                            <img id="bg-watermark" src="logo.png" class="absolute -top-[100px] -left-[100px] w-[800px] h-[800px] object-contain opacity-25 pointer-events-none mix-blend-multiply z-[1] transition-opacity" alt="" onerror="this.style.display='none'">
+
                             <!-- Subtle background graphics -->
                             <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 50% 0%, var(--theme-color) 0%, transparent 60%);"></div>
                             
                             <!-- Agency & Logo Row -->
-                            <div class="flex items-center gap-6 mb-6 relative z-10">
+                            <div id="agency-wrapper" class="flex items-center gap-6 mb-6 relative z-10 w-full justify-center transition-all">
                                 <!-- Logo Placeholder -->
                                 <div id="logo-container" class="w-24 h-24 rounded-full bg-white border-4 flex items-center justify-center shadow-md overflow-hidden shrink-0 transition-colors" style="border-color: var(--theme-color);">
                                     <img id="logo-image" src="logo.png" alt="โลโก้หน่วยงาน" class="w-full h-full object-contain p-1" onerror="this.style.display='none'">
                                 </div>
-                                <h2 id="out-agency" class="text-[3.2rem] font-extrabold tracking-tight theme-text transition-colors">
-                                    สำนักงานเขตพญาไท
+                                <h2 id="out-agency" class="text-[3.2rem] font-extrabold tracking-tight theme-text transition-all">
                                 </h2>
                             </div>
 
                             <!-- Headline -->
-                            <div id="title-wrapper" class="w-full text-center relative z-10 transition-opacity">
+                            <div id="title-wrapper" class="w-full flex justify-center relative z-10 transition-all">
                                 <!-- กล่องพาดหัวข่าว -->
                                 <div id="title-box" class="inline-block px-10 pt-5 pb-8 shadow-[0_8px_20px_rgba(0,0,0,0.15)] theme-bg border-black/20 transition-all duration-300">
-                                    <h1 id="out-title" class="text-[4.5rem] font-black text-white leading-[1.3] drop-shadow-md pb-4 transition-all duration-300">
-                                        ล้างดินโคลนหลังน้ำท่วมขัง
+                                    <h1 id="out-title" class="text-[4.5rem] font-black text-white leading-normal drop-shadow-md pb-4 transition-all duration-300">
                                     </h1>
                                 </div>
                             </div>
 
                             <!-- Location Tag -->
-                            <div id="location-wrapper" class="mt-8 relative z-10 transition-opacity">
+                            <div id="location-wrapper" class="mt-8 relative z-10 w-full flex justify-center transition-all">
                                 <div id="location-box" class="theme-bg-dark text-white px-8 py-3 rounded-full flex items-center gap-3 shadow-lg font-semibold text-2xl border-2 border-white transition-all duration-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-400 shrink-0" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
                                     </svg>
-                                    <span id="out-location">ถนนพหลโยธิน • ซอยพหลโยธิน 4</span>
+                                    <span id="out-location"></span>
                                 </div>
                             </div>
                         </div>
@@ -240,9 +239,9 @@
                             <!-- Details Text -->
                             <div id="wrap-details" class="w-full text-center relative flex-1 flex flex-col items-center justify-center transition-opacity py-2">
                                 <div id="out-details-container" class="flex flex-col items-center justify-center w-full theme-text transition-colors" style="font-size: 35px;">
-                                    <p id="out-detail-1" class="font-black leading-tight mb-2" style="font-size: 2.4em;"></p>
-                                    <p id="out-detail-2" class="font-medium leading-tight mt-1" style="font-size: 1em;"></p>
-                                    <p id="out-detail-3" class="font-medium leading-tight mt-1" style="font-size: 1em;"></p>
+                                    <p id="out-detail-1" class="font-black leading-tight mb-2 w-full text-center transition-all" style="font-size: 2.4em;"></p>
+                                    <p id="out-detail-2" class="font-medium leading-tight mt-1 w-full text-center transition-all" style="font-size: 1em;"></p>
+                                    <p id="out-detail-3" class="font-medium leading-tight mt-1 w-full text-center transition-all" style="font-size: 1em;"></p>
                                 </div>
                             </div>
                             
@@ -273,31 +272,109 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อหน่วยงาน / องค์กร</label>
                 <input type="text" id="in-agency" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition text-sm shadow-sm" placeholder="เช่น สำนักงานเขตพญาไท">
+                
+                <!-- Format Toolbar -->
+                <div class="flex items-center justify-between mt-1 bg-gray-50/80 rounded px-2 py-1.5 border border-gray-200">
+                    <div class="flex gap-1">
+                        <button onclick="setTextAlign('agency-wrapper', 'left')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                        <button onclick="setTextAlign('agency-wrapper', 'center')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                        <button onclick="setTextAlign('agency-wrapper', 'right')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                    </div>
+                    <div class="flex gap-1">
+                        <button onclick="changeFontSize('out-agency', -4)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold transition-colors">A-</button>
+                        <button onclick="changeFontSize('out-agency', 4)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold transition-colors">A+</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Headline Input -->
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1">พาดหัวข่าว (Headline)</label>
                 <textarea id="in-title" rows="2" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition text-sm shadow-sm" placeholder="พิมพ์พาดหัวข่าวที่นี่..."></textarea>
+                
+                <!-- Format Toolbar -->
+                <div class="flex items-center justify-between mt-1 bg-gray-50/80 rounded px-2 py-1.5 border border-gray-200">
+                    <div class="flex gap-1">
+                        <button onclick="setTextAlign('title-wrapper', 'left')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                        <button onclick="setTextAlign('title-wrapper', 'center')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                        <button onclick="setTextAlign('title-wrapper', 'right')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                    </div>
+                    <div class="flex gap-1">
+                        <button onclick="changeFontSize('out-title', -6)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold transition-colors">A-</button>
+                        <button onclick="changeFontSize('out-title', 6)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold transition-colors">A+</button>
+                    </div>
+                </div>
             </div>
             
             <!-- Location Input -->
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1">สถานที่ (Location Tag)</label>
                 <input type="text" id="in-location" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition text-sm shadow-sm" placeholder="เช่น ถนนพหลโยธิน • ซอยพหลโยธิน 4">
+                
+                <!-- Format Toolbar -->
+                <div class="flex items-center justify-between mt-1 bg-gray-50/80 rounded px-2 py-1.5 border border-gray-200">
+                    <div class="flex gap-1">
+                        <button onclick="setTextAlign('location-wrapper', 'left')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                        <button onclick="setTextAlign('location-wrapper', 'center')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                        <button onclick="setTextAlign('location-wrapper', 'right')" class="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                    </div>
+                    <div class="flex gap-1">
+                        <button onclick="changeFontSize('location-box', -2)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold transition-colors">A-</button>
+                        <button onclick="changeFontSize('location-box', 2)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold transition-colors">A+</button>
+                    </div>
+                </div>
             </div>
             
             <!-- Details Input -->
             <div class="space-y-3">
                 <label class="block text-sm font-semibold text-gray-700 mb-1">รายละเอียดด้านล่าง (3 บรรทัด)</label>
+                
+                <!-- Detail 1 -->
                 <div>
                     <input type="text" id="in-detail-1" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none shadow-sm" placeholder="บรรทัดที่ 1 (ตัวหนังสือขนาดใหญ่สุด)...">
+                    <div class="flex items-center justify-between mt-1 bg-gray-50/80 rounded px-2 py-1.5 border border-gray-200">
+                        <div class="flex gap-1">
+                            <button onclick="setTextAlign('out-detail-1', 'left')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                            <button onclick="setTextAlign('out-detail-1', 'center')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                            <button onclick="setTextAlign('out-detail-1', 'right')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="changeFontSize('out-detail-1', -3)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold">A-</button>
+                            <button onclick="changeFontSize('out-detail-1', 3)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold">A+</button>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Detail 2 -->
                 <div>
                     <input type="text" id="in-detail-2" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none shadow-sm" placeholder="บรรทัดที่ 2 (ตัวหนังสือขนาดปกติ)...">
+                    <div class="flex items-center justify-between mt-1 bg-gray-50/80 rounded px-2 py-1.5 border border-gray-200">
+                        <div class="flex gap-1">
+                            <button onclick="setTextAlign('out-detail-2', 'left')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                            <button onclick="setTextAlign('out-detail-2', 'center')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                            <button onclick="setTextAlign('out-detail-2', 'right')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="changeFontSize('out-detail-2', -2)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold">A-</button>
+                            <button onclick="changeFontSize('out-detail-2', 2)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold">A+</button>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Detail 3 -->
                 <div>
                     <input type="text" id="in-detail-3" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none shadow-sm" placeholder="บรรทัดที่ 3 (ตัวหนังสือขนาดปกติ)...">
+                    <div class="flex items-center justify-between mt-1 bg-gray-50/80 rounded px-2 py-1.5 border border-gray-200">
+                        <div class="flex gap-1">
+                            <button onclick="setTextAlign('out-detail-3', 'left')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                            <button onclick="setTextAlign('out-detail-3', 'center')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                            <button onclick="setTextAlign('out-detail-3', 'right')" class="p-1 hover:bg-gray-200 rounded text-gray-600"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="changeFontSize('out-detail-3', -2)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold">A-</button>
+                            <button onclick="changeFontSize('out-detail-3', 2)" class="px-2 py-0.5 hover:bg-gray-200 rounded text-gray-600 text-xs font-bold">A+</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -479,11 +556,13 @@
             // 1. Title Adjust
             const titleEl = document.getElementById('out-title');
             const titleWrap = document.getElementById('title-wrapper');
-            if (titleEl.textContent.trim()) {
+            
+            // Only auto-adjust if the user hasn't manually changed the size
+            if (titleEl.textContent.trim() && titleEl.dataset.manualSize !== "true") {
                 titleEl.style.fontSize = '4.5rem'; 
                 let size = 72; // px approx for 4.5rem
+                
                 // Max width allowed is roughly 900px
-                // Also check if height is getting too large for its container, though width is usually the constraint here
                 while (titleEl.offsetWidth > 900 && size > 24) {
                     size -= 2;
                     titleEl.style.fontSize = size + 'px';
@@ -497,7 +576,7 @@
             const d2 = document.getElementById('in-detail-2').value.trim();
             const d3 = document.getElementById('in-detail-3').value.trim();
             
-            if ((d1 || d2 || d3) && detailsWrap) {
+            if ((d1 || d2 || d3) && detailsWrap && detailsContainer.dataset.manualSize !== "true") {
                 let size = 35; // base font size
                 detailsContainer.style.fontSize = size + 'px';
                 
@@ -509,51 +588,96 @@
             }
         }
 
-        // Handle Image Uploads with Auto-Resize (แก้ปัญหาพิกเซลใหญ่เกินไป)
-        document.getElementById('in-images').addEventListener('change', async function(e) {
-            const files = Array.from(e.target.files).slice(0, 10);
-            if(files.length === 0) return;
+        // --- NEW: Text Alignment Function ---
+        function setTextAlign(targetId, align) {
+            const el = document.getElementById(targetId);
+            if(!el) return;
+            
+            // Convert 'left', 'center', 'right' to flex alignment
+            let justify = 'center';
+            if(align === 'left') justify = 'flex-start';
+            if(align === 'right') justify = 'flex-end';
 
-            // แสดงสถานะว่ากำลังปรับขนาดรูป
-            const uploadBox = this.previousElementSibling;
-            const originalHtml = uploadBox.innerHTML;
-            uploadBox.innerHTML = `<div class="flex flex-col items-center justify-center h-full space-y-2 py-4"><svg class="animate-spin h-8 w-8 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span class="text-sm font-medium text-green-600">กำลังปรับสัดส่วนพิกเซล...</span></div>`;
+            // For wrappers using Flexbox (Agency, Title, Location)
+            if(['agency-wrapper', 'location-wrapper', 'title-wrapper'].includes(targetId)) {
+                el.style.justifyContent = justify;
+                el.style.textAlign = align;
+            } 
+            // For block text (Details lines)
+            else if (targetId.startsWith('out-detail')) {
+                el.style.textAlign = align;
+            }
+        }
 
-            imageUrls.forEach(url => URL.revokeObjectURL(url));
-            imageUrls = [];
-
-            // ทำการ Resize ทีละไฟล์
-            for (let file of files) {
-                const resizedUrl = await resizeImage(file, 1500); // บีบความกว้าง/สูง ไม่ให้เกิน 1500px
-                imageUrls.push(resizedUrl);
+        // --- NEW: Font Size Adjustment Function ---
+        function changeFontSize(targetId, delta) {
+            const el = document.getElementById(targetId);
+            if(!el) return;
+            
+            // Mark element so autoAdjustText doesn't reset it
+            el.dataset.manualSize = "true";
+            if(targetId.startsWith('out-detail')) {
+                // If adjusting a detail line, stop container auto-adjust too
+                document.getElementById('out-details-container').dataset.manualSize = "true";
             }
 
+            // Get current computed font-size in pixels
+            const style = window.getComputedStyle(el, null).getPropertyValue('font-size');
+            let currentSize = parseFloat(style);
+            
+            // Apply new size
+            el.style.fontSize = (currentSize + delta) + 'px';
+        }
+
+        // Handle Image Uploads with Auto-Resize
+        document.getElementById('in-images').addEventListener('change', async (e) => {
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+            
+            // จำกัดจำนวนรูปสูงสุด 10 รูป
+            const filesToProcess = Array.from(files).slice(0, 10);
+            
+            // ลบ URL เดิมออกจาก Memory
+            imageUrls.forEach(url => URL.revokeObjectURL(url));
+            imageUrls = [];
+            
+            // นำภาพไปปรับขนาดและเก็บ URL ใหม่
+            for (const file of filesToProcess) {
+                try {
+                    const url = await resizeImage(file);
+                    imageUrls.push(url);
+                } catch(err) {
+                    console.error("Error processing image", err);
+                }
+            }
+            
             renderImages();
-            uploadBox.innerHTML = originalHtml; // คืนค่าปุ่มเดิม
-            this.value = '';
         });
 
-        // ฟังก์ชันบีบอัดและปรับขนาดพิกเซลของรูปภาพก่อนนำไปใส่กรอบ
-        function resizeImage(file, maxSize) {
+        // ฟังก์ชันบีบอัดและปรับขนาดรูปภาพอัตโนมัติ
+        function resizeImage(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = function(e) {
                     const img = new Image();
-                    img.onload = () => {
+                    img.onload = function() {
+                        const MAX_WIDTH = 1500;
+                        const MAX_HEIGHT = 1500;
                         let width = img.width;
                         let height = img.height;
-                        
-                        // ถ้ารูปมีขนาดพิกเซลใหญ่กว่าที่กำหนด ให้ปรับสัดส่วนลงมา
-                        if (width > maxSize || height > maxSize) {
-                            if (width > height) {
-                                height = Math.round((height * maxSize) / width);
-                                width = maxSize;
-                            } else {
-                                width = Math.round((width * maxSize) / height);
-                                height = maxSize;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
                             }
                         }
-                        
+
                         const canvas = document.createElement('canvas');
                         canvas.width = width;
                         canvas.height = height;
