@@ -87,6 +87,52 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* =========================================
+           THEME & LAYOUT CSS VARIABLES
+           ========================================= */
+        .theme-bg { background-color: var(--theme-color) !important; }
+        .theme-bg-dark { background-color: var(--theme-dark) !important; }
+        .theme-text { color: var(--theme-color) !important; }
+        .theme-stroke { stroke: var(--theme-color) !important; }
+
+        /* --- LAYOUT: CLASSIC (Default) --- */
+        #news-canvas[data-layout="classic"] #title-box { transform: rotate(-1deg); border-radius: 1rem; border-bottom-width: 6px; }
+        #news-canvas[data-layout="classic"] #out-title { transform: rotate(1deg); }
+
+        /* --- LAYOUT: MODERN --- */
+        #news-canvas[data-layout="modern"] #section-header { align-items: flex-start; padding-left: 3rem; text-align: left; }
+        #news-canvas[data-layout="modern"] #title-wrapper { text-align: left; }
+        #news-canvas[data-layout="modern"] #title-box { transform: none; border-radius: 0 1rem 1rem 0; border-left: 12px solid var(--theme-dark); border-bottom: none; display: inline-block; padding-left: 2rem; padding-right: 3rem; }
+        #news-canvas[data-layout="modern"] #out-title { transform: none; }
+        #news-canvas[data-layout="modern"] #location-wrapper { display: flex; justify-content: flex-start; margin-top: 1.5rem; }
+        #news-canvas[data-layout="modern"] #footer-svg { display: none; }
+        #news-canvas[data-layout="modern"] #section-footer { background-color: white; border-top: 8px solid var(--theme-color); align-items: flex-start; padding-left: 4rem; padding-bottom: 2.5rem; }
+        #news-canvas[data-layout="modern"] #wrap-details { text-align: left; align-items: flex-start; }
+        #news-canvas[data-layout="modern"] #out-details-container { align-items: flex-start; }
+        #news-canvas[data-layout="modern"] #bg-watermark { left: -50px; top: -50px; }
+
+        /* --- LAYOUT: OVERLAY --- */
+        #news-canvas[data-layout="overlay"] { background-color: #000; }
+        #news-canvas[data-layout="overlay"] #section-header { position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%); z-index: 10; padding-top: 2.5rem; padding-bottom: 4rem; }
+        #news-canvas[data-layout="overlay"] #title-box { background-color: transparent !important; border: none; padding: 0; transform: none; box-shadow: none; }
+        #news-canvas[data-layout="overlay"] #out-title { transform: none; color: white !important; text-shadow: 2px 4px 10px rgba(0,0,0,0.8); }
+        #news-canvas[data-layout="overlay"] #out-agency { color: white !important; text-shadow: 1px 2px 5px rgba(0,0,0,0.8); }
+        #news-canvas[data-layout="overlay"] #location-box { background-color: var(--theme-color) !important; border: none; }
+        #news-canvas[data-layout="overlay"] #footer-svg { display: none; }
+        #news-canvas[data-layout="overlay"] #section-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%); z-index: 10; min-height: auto; padding-bottom: 3rem; padding-top: 6rem; border: none; }
+        #news-canvas[data-layout="overlay"] #out-details-container { color: white !important; text-shadow: 1px 2px 5px rgba(0,0,0,0.9); }
+        #news-canvas[data-layout="overlay"] #footer-decor { display: none; }
+        #news-canvas[data-layout="overlay"] #bg-watermark { display: none; }
+
+        /* --- LAYOUT: MINIMAL --- */
+        #news-canvas[data-layout="minimal"] #section-header { background-color: white; padding-top: 3rem; }
+        #news-canvas[data-layout="minimal"] #title-box { background-color: white !important; border: 4px solid var(--theme-color); box-shadow: none; transform: none; border-radius: 999px; padding: 15px 50px; }
+        #news-canvas[data-layout="minimal"] #out-title { transform: none; color: var(--theme-color) !important; text-shadow: none; }
+        #news-canvas[data-layout="minimal"] #location-box { background-color: transparent !important; color: var(--theme-color) !important; border: 3px solid var(--theme-color); box-shadow: none; }
+        #news-canvas[data-layout="minimal"] #footer-svg { display: none; }
+        #news-canvas[data-layout="minimal"] #section-footer { background-color: white; border-top: 1px solid #e5e7eb; padding-bottom: 2.5rem; }
+        #news-canvas[data-layout="minimal"] #bg-watermark { opacity: 0.08; mix-blend-mode: normal; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden text-gray-800">
@@ -123,32 +169,32 @@
                 <!-- THE ACTUAL CANVAS TO CAPTURE: Portrait 4:5 Aspect Ratio (1080x1350) -->
                 <div id="canvas-container" class="absolute origin-center transition-transform duration-200" style="width: 1080px; height: 1350px;">
                     
-                    <div id="news-canvas" class="bg-white w-full h-full shadow-2xl flex flex-col relative overflow-hidden">
+                    <div id="news-canvas" data-layout="classic" class="bg-white w-full h-full shadow-2xl flex flex-col relative overflow-hidden" style="--theme-color: #15803d; --theme-dark: #14532d;">
                         
                         <!-- Watermark Background Logo -->
-                        <img id="bg-watermark" src="logo.png" class="absolute -top-[120px] -left-[120px] w-[750px] h-[750px] object-contain opacity-[0.12] pointer-events-none z-0" alt="">
+                        <img id="bg-watermark" src="logo.png" class="absolute -top-[100px] -left-[100px] w-[800px] h-[800px] object-contain opacity-25 pointer-events-none mix-blend-multiply z-[1] transition-opacity" alt="" onerror="this.style.display='none'">
 
                         <!-- Top Header Section (25%) -->
-                        <div class="relative pt-12 pb-6 px-10 flex flex-col items-center z-10 shrink-0">
+                        <div id="section-header" class="relative pt-12 pb-6 px-10 flex flex-col items-center z-10 shrink-0 transition-all duration-300">
                             <!-- Subtle background graphics -->
-                            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 50% 0%, #15803d 0%, transparent 60%);"></div>
+                            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 50% 0%, var(--theme-color) 0%, transparent 60%);"></div>
                             
                             <!-- Agency & Logo Row -->
                             <div class="flex items-center gap-6 mb-6 relative z-10">
-                                <!-- Logo Placeholder (can be replaced with real logo if uploaded, default to a crest icon) -->
-                                <div id="logo-container" class="w-24 h-24 rounded-full bg-white border-4 flex items-center justify-center shadow-md overflow-hidden shrink-0" style="border-color: #15803d;">
+                                <!-- Logo Placeholder -->
+                                <div id="logo-container" class="w-24 h-24 rounded-full bg-white border-4 flex items-center justify-center shadow-md overflow-hidden shrink-0 transition-colors" style="border-color: var(--theme-color);">
                                     <img id="logo-image" src="logo.png" alt="โลโก้หน่วยงาน" class="w-full h-full object-contain p-1" onerror="this.style.display='none'">
                                 </div>
-                                <h2 id="out-agency" class="text-[3.2rem] font-extrabold tracking-tight theme-text" style="color: #15803d;">
+                                <h2 id="out-agency" class="text-[3.2rem] font-extrabold tracking-tight theme-text transition-colors">
                                     สำนักงานเขตพญาไท
                                 </h2>
                             </div>
 
                             <!-- Headline -->
                             <div id="title-wrapper" class="w-full text-center relative z-10 transition-opacity">
-                                <!-- เพิ่ม padding ด้านล่าง (pb-8) เพื่อไม่ให้สระอุ/อู โดนตัด -->
-                                <div class="inline-block px-10 pt-5 pb-8 rounded-2xl shadow-[0_8px_20px_rgba(0,0,0,0.15)] theme-bg border-b-[6px] border-black/20" style="background-color: #15803d; transform: rotate(-1deg);">
-                                    <h1 id="out-title" class="text-[4.5rem] font-black text-white leading-normal drop-shadow-md pb-2" style="transform: rotate(1deg);">
+                                <!-- กล่องพาดหัวข่าว -->
+                                <div id="title-box" class="inline-block px-10 pt-5 pb-8 shadow-[0_8px_20px_rgba(0,0,0,0.15)] theme-bg border-black/20 transition-all duration-300">
+                                    <h1 id="out-title" class="text-[4.5rem] font-black text-white leading-[1.3] drop-shadow-md pb-4 transition-all duration-300">
                                         ล้างดินโคลนหลังน้ำท่วมขัง
                                     </h1>
                                 </div>
@@ -156,7 +202,7 @@
 
                             <!-- Location Tag -->
                             <div id="location-wrapper" class="mt-8 relative z-10 transition-opacity">
-                                <div class="theme-bg-dark text-white px-8 py-3 rounded-full flex items-center gap-3 shadow-lg font-semibold text-2xl border-2 border-white" style="background-color: #14532d;">
+                                <div id="location-box" class="theme-bg-dark text-white px-8 py-3 rounded-full flex items-center gap-3 shadow-lg font-semibold text-2xl border-2 border-white transition-all duration-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-400" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
                                     </svg>
@@ -166,7 +212,7 @@
                         </div>
 
                         <!-- Middle Images Section (~60%) -->
-                        <div class="flex-1 w-full bg-white relative z-0 flex flex-col justify-center">
+                        <div id="section-images" class="flex-1 w-full bg-white relative z-0 flex flex-col justify-center transition-all duration-300">
                             <div id="out-images" class="hidden w-full h-full">
                                 <!-- Images injected by JS -->
                             </div>
@@ -181,19 +227,19 @@
                         </div>
 
                         <!-- Bottom Footer Section (~15%) -->
-                        <div class="relative w-full shrink-0 min-h-[220px] bg-white flex flex-col justify-end pb-10 px-12 z-20">
+                        <div id="section-footer" class="relative w-full shrink-0 min-h-[220px] bg-white flex flex-col justify-end pb-10 px-12 z-20 transition-all duration-300">
                             <!-- Decorative Top Border (Curves) -->
-                            <div class="absolute top-0 left-0 w-full overflow-hidden -translate-y-[98%]">
+                            <div id="footer-svg" class="absolute top-0 left-0 w-full overflow-hidden -translate-y-[98%]">
                                 <svg viewBox="0 0 1080 120" class="w-full h-[60px]" preserveAspectRatio="none">
                                     <path d="M0,120 C300,0 780,0 1080,120 Z" fill="white" />
-                                    <path d="M0,120 C300,10 780,10 1080,120 Z" fill="none" class="theme-stroke" stroke="#15803d" stroke-width="8" opacity="0.8"/>
+                                    <path d="M0,120 C300,10 780,10 1080,120 Z" fill="none" class="theme-stroke" stroke-width="8" opacity="0.8"/>
                                     <path d="M0,120 C250,30 830,30 1080,120 Z" fill="none" stroke="#f97316" stroke-width="4" opacity="0.9"/>
                                 </svg>
                             </div>
                             
                             <!-- Details Text -->
                             <div id="wrap-details" class="w-full text-center relative flex-1 flex flex-col items-center justify-center transition-opacity py-2">
-                                <div id="out-details-container" class="flex flex-col items-center justify-center w-full theme-text" style="color: #15803d; font-size: 35px;">
+                                <div id="out-details-container" class="flex flex-col items-center justify-center w-full theme-text transition-colors" style="font-size: 35px;">
                                     <p id="out-detail-1" class="font-black leading-tight mb-2" style="font-size: 2.4em;"></p>
                                     <p id="out-detail-2" class="font-medium leading-tight mt-1" style="font-size: 1em;"></p>
                                     <p id="out-detail-3" class="font-medium leading-tight mt-1" style="font-size: 1em;"></p>
@@ -201,7 +247,7 @@
                             </div>
                             
                             <!-- Bottom Decorative line -->
-                            <div class="absolute bottom-0 left-0 w-full h-3 theme-bg" style="background-color: #15803d;"></div>
+                            <div id="footer-decor" class="absolute bottom-0 left-0 w-full h-3 theme-bg transition-colors"></div>
                         </div>
                         
                     </div>
@@ -282,10 +328,21 @@
                 <p class="text-[10px] text-gray-500 mt-2 text-center" id="fit-helper-text">ภาพจะแสดงครบทุกส่วน แต่อาจมีขอบสีเทาถ้าสัดส่วนไม่พอดีช่อง</p>
             </div>
 
+            <!-- Layout Style Selection -->
+            <div class="mt-4 bg-white border border-gray-200 shadow-sm p-3 rounded-xl">
+                <label class="block text-sm font-semibold text-gray-800 mb-2">รูปแบบเลย์เอาต์ (Layout Style)</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="setNewsLayout('classic', this)" class="layout-btn active border-2 border-green-600 bg-green-50 text-green-700 py-2 rounded-lg text-xs font-bold transition-all">Classic<br><span class="font-normal text-[10px]">ดั้งเดิม โค้งมน</span></button>
+                    <button onclick="setNewsLayout('modern', this)" class="layout-btn border-2 border-transparent bg-gray-100 text-gray-600 hover:bg-gray-200 py-2 rounded-lg text-xs font-bold transition-all">Modern<br><span class="font-normal text-[10px]">เหลี่ยม ทันสมัย</span></button>
+                    <button onclick="setNewsLayout('overlay', this)" class="layout-btn border-2 border-transparent bg-gray-100 text-gray-600 hover:bg-gray-200 py-2 rounded-lg text-xs font-bold transition-all">Overlay<br><span class="font-normal text-[10px]">ภาพเต็มจอ ทับอักษร</span></button>
+                    <button onclick="setNewsLayout('minimal', this)" class="layout-btn border-2 border-transparent bg-gray-100 text-gray-600 hover:bg-gray-200 py-2 rounded-lg text-xs font-bold transition-all">Minimal<br><span class="font-normal text-[10px]">คลีนๆ พื้นฐานขาว</span></button>
+                </div>
+            </div>
+
             <!-- Theme Settings -->
-            <div class="mt-2">
+            <div class="mt-4">
                 <label class="block text-sm font-semibold text-gray-800 mb-2">สีธีมหลัก</label>
-                <div class="flex gap-3" id="theme-colors">
+                <div class="flex flex-wrap gap-3" id="theme-colors">
                     <!-- Themes generated by JS -->
                 </div>
             </div>
@@ -306,21 +363,18 @@
 
         // Theme Configurations
         const themes = [
-            { id: 'green', hex: '#15803d', dark: '#14532d' }, // Green (Default - matches reference)
+            { id: 'green', hex: '#15803d', dark: '#14532d' }, // Green (Default)
             { id: 'blue', hex: '#1d4ed8', dark: '#1e3a8a' },  // Blue
             { id: 'red', hex: '#b91c1c', dark: '#7f1d1d' },   // Red
             { id: 'orange', hex: '#ea580c', dark: '#9a3412' },// Orange
-            { id: 'purple', hex: '#7e22ce', dark: '#581c87' } // Purple
+            { id: 'purple', hex: '#7e22ce', dark: '#581c87' },// Purple
+            { id: 'pink', hex: '#db2777', dark: '#be185d' },  // Pink
+            { id: 'teal', hex: '#0f766e', dark: '#115e59' },  // Teal
+            { id: 'indigo', hex: '#4338ca', dark: '#3730a3' },// Indigo
+            { id: 'yellow', hex: '#ca8a04', dark: '#a16207' },// Yellow
+            { id: 'gray', hex: '#4b5563', dark: '#374151' }   // Gray
         ];
         let currentTheme = themes[0];
-
-        // Default Data
-        const defaultData = {
-            agency: '',
-            title: '',
-            location: '',
-            details: ''
-        };
 
         // Setup Themes UI
         function setupThemes() {
@@ -339,25 +393,19 @@
             });
         }
 
-        // Apply chosen theme colors to layout elements
+        // Apply chosen theme colors via CSS Variables
         function applyTheme(theme, activeBtn) {
             currentTheme = theme;
             
-            // Backgrounds
-            document.querySelectorAll('.theme-bg').forEach(el => el.style.backgroundColor = theme.hex);
-            document.querySelectorAll('.theme-bg-dark').forEach(el => el.style.backgroundColor = theme.dark);
+            const canvas = document.getElementById('news-canvas');
+            canvas.style.setProperty('--theme-color', theme.hex);
+            canvas.style.setProperty('--theme-dark', theme.dark);
             
-            // Text Colors
-            document.querySelectorAll('.theme-text').forEach(el => el.style.color = theme.hex);
-            
-            // Strokes / Borders
-            document.querySelectorAll('.theme-stroke').forEach(el => el.setAttribute('stroke', theme.hex));
-            
-            // Border color for logo
+            // Border color for logo (if needed explicitly)
             const logo = document.getElementById('logo-container');
             if(logo) logo.style.borderColor = theme.hex;
             
-            // Update buttons
+            // Update UI buttons
             const buttons = document.querySelectorAll('#theme-colors button');
             buttons.forEach(b => {
                 b.style.borderColor = 'transparent';
@@ -365,6 +413,23 @@
             });
             activeBtn.style.borderColor = '#111827';
             activeBtn.classList.add('scale-110');
+        }
+
+        // Layout Switcher Function
+        function setNewsLayout(layoutName, activeBtn) {
+            const canvas = document.getElementById('news-canvas');
+            canvas.setAttribute('data-layout', layoutName);
+
+            // Update UI Buttons
+            const buttons = document.querySelectorAll('.layout-btn');
+            buttons.forEach(btn => {
+                btn.className = 'layout-btn border-2 border-transparent bg-gray-100 text-gray-600 hover:bg-gray-200 py-2 rounded-lg text-xs font-bold transition-all';
+            });
+            
+            // Set active styles
+            activeBtn.className = `layout-btn active border-2 border-[${currentTheme.hex}] bg-gray-50 py-2 rounded-lg text-xs font-bold transition-all shadow-sm`;
+            activeBtn.style.borderColor = currentTheme.hex;
+            activeBtn.style.color = currentTheme.hex;
         }
 
         // Setup Event Listeners for Text Inputs
