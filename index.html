@@ -125,6 +125,9 @@
                     
                     <div id="news-canvas" class="bg-white w-full h-full shadow-2xl flex flex-col relative overflow-hidden">
                         
+                        <!-- Watermark Background Logo -->
+                        <img id="bg-watermark" src="logo.png" class="absolute -top-[120px] -left-[120px] w-[750px] h-[750px] object-contain opacity-[0.12] pointer-events-none z-0" alt="">
+
                         <!-- Top Header Section (25%) -->
                         <div class="relative pt-12 pb-6 px-10 flex flex-col items-center z-10 shrink-0">
                             <!-- Subtle background graphics -->
@@ -678,16 +681,19 @@
         // ฟังก์ชันสลับโลโก้
         function setLogoMode(mode) {
             const img = document.getElementById('logo-image');
+            const watermark = document.getElementById('bg-watermark');
             const btnBma = document.getElementById('logo-bma');
             const btnDistrict = document.getElementById('logo-district');
             
             if (mode === 'bma') {
                 img.src = 'logo1.png';
+                if(watermark) watermark.src = 'logo1.png';
                 img.style.display = 'block'; // เผื่อกรณีที่เคย error แล้วซ่อนไป
                 btnBma.className = 'flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md bg-white shadow-sm text-green-700 transition-colors';
                 btnDistrict.className = 'flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md text-gray-500 hover:text-gray-800 transition-colors';
             } else {
                 img.src = 'logo.png';
+                if(watermark) watermark.src = 'logo.png';
                 img.style.display = 'block';
                 btnDistrict.className = 'flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md bg-white shadow-sm text-green-700 transition-colors';
                 btnBma.className = 'flex-1 py-1.5 text-xs sm:text-sm font-medium rounded-md text-gray-500 hover:text-gray-800 transition-colors';
